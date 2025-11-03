@@ -1,7 +1,7 @@
 import WelcomeMessage from './components/WelcomeMessage.jsx';
-import Header from './Header';
-import MainContent from './MainContent';
-import Footer from './Footer';
+import Header from './components/Header.jsx';
+import MainContent from './components/MainContent.jsx';
+import Footer from './components/Footer.jsx';
 import React from "react";
 import UserProfile from "./components/UserProfile";
 function App() {
