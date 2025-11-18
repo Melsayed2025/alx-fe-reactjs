@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useRecipeStore } from '../store/recipeStore';
 
-const AddRecipeForm = () => {
-  const addRecipe = useRecipeStore((s) => s.addRecipe);
+const EditRecipeForm = () => {
+  const { id } = useParams();
+  const recipe = useRecipeStore(state => state.recipes.find(r => r.id === id));
+  const updateRecipe = useRecipeStore(state => state.updateRecipe);
   const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
@@ -11,9 +13,20 @@ const AddRecipeForm = () => {
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
 
+  useEffect(() => {
+    if (recipe) {
+      setTitle(recipe.title || '');
+      setDescription(recipe.description || '');
+      setIngredients((recipe.ingredients || []).join(', '));
+      setInstructions(recipe.instructions || '');
+    }
+  }, [recipe]);
+
+  if (!recipe) return <div>Recipe not found.</div>;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const id = addRecipe({
+    updateRecipe(id, {
       title,
       description,
       ingredients: ingredients ? ingredients.split(',').map(i => i.trim()) : [],
@@ -44,9 +57,12 @@ const AddRecipeForm = () => {
         <textarea value={instructions} onChange={e => setInstructions(e.target.value)} className="w-full" />
       </div>
 
-      <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Add</button>
+      <div className="space-x-2">
+        <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+        <button type="button" onClick={() => navigate(-1)} className="px-4 py-2 border rounded">Cancel</button>
+      </div>
     </form>
   );
 };
 
-export default AddRecipeForm;
+export default EditRecipeForm;
