@@ -1,50 +1,47 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useRecipeStore } from '../store/recipeStore';
+// src/components/AddRecipeForm.jsx
+
+import { useState } from 'react';
+import useRecipeStore from '../recipeStore';
 
 const AddRecipeForm = () => {
-  const addRecipe = useRecipeStore((s) => s.addRecipe);
-  const navigate = useNavigate();
-
+  // استخراج الدالة التي نحتاجها فقط لتجنب إعادة التصيير غير الضرورية
+  const addRecipe = useRecipeStore(state => state.addRecipe);
+  
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [ingredients, setIngredients] = useState('');
-  const [instructions, setInstructions] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const id = addRecipe({
-      title,
-      description,
-      ingredients: ingredients ? ingredients.split(',').map(i => i.trim()) : [],
-      instructions,
-    });
-    navigate(`/recipes/${id}`);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!title.trim() || !description.trim()) return;
+
+    // استدعاء دالة تحديث الحالة من مخزن Zustand
+    addRecipe({ title, description }); 
+    
+    // مسح الحقول بعد الإضافة
+    setTitle('');
+    setDescription('');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 max-w-lg">
-      <div>
-        <label>Title</label>
-        <input value={title} onChange={e => setTitle(e.target.value)} className="w-full" />
-      </div>
-
-      <div>
-        <label>Description</label>
-        <input value={description} onChange={e => setDescription(e.target.value)} className="w-full" />
-      </div>
-
-      <div>
-        <label>Ingredients (comma separated)</label>
-        <input value={ingredients} onChange={e => setIngredients(e.target.value)} className="w-full" />
-      </div>
-
-      <div>
-        <label>Instructions</label>
-        <textarea value={instructions} onChange={e => setInstructions(e.target.value)} className="w-full" />
-      </div>
-
-      <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Add</button>
+    <form onSubmit={handleSubmit} style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '5px', marginBottom: '20px' }}>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="عنوان الوصفة"
+        required
+        style={{ display: 'block', marginBottom: '10px', padding: '8px', width: '100%' }}
+      />
+      <textarea
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="وصف الوصفة"
+        required
+        style={{ display: 'block', marginBottom: '10px', padding: '8px', width: '100%', minHeight: '80px' }}
+      />
+      <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px' }}>
+        أضف وصفة جديدة
+      </button>
     </form>
   );
 };

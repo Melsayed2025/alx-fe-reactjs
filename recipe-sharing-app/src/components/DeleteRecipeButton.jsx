@@ -1,5 +1,6 @@
-import React from 'react';
-import { useRecipeStore } from '../store/recipeStore';
+// src/components/DeleteRecipeButton.jsx
+
+import useRecipeStore from '../recipeStore';
 import { useNavigate } from 'react-router-dom';
 
 const DeleteRecipeButton = ({ recipeId }) => {
@@ -7,15 +8,18 @@ const DeleteRecipeButton = ({ recipeId }) => {
   const navigate = useNavigate();
 
   const handleDelete = () => {
-    const confirmed = window.confirm('Are you sure you want to delete this recipe?');
-    if (!confirmed) return;
-    deleteRecipe(recipeId);
-    navigate('/');
+    if (window.confirm('هل أنت متأكد من حذف هذه الوصفة؟')) {
+      deleteRecipe(recipeId);
+      navigate('/'); // العودة إلى القائمة بعد الحذف
+    }
   };
 
   return (
-    <button onClick={handleDelete} className="px-3 py-2 bg-red-600 text-white rounded">
-      Delete
+    <button 
+      onClick={handleDelete}
+      style={{ padding: '8px 12px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', marginRight: '10px' }}
+    >
+      حذف
     </button>
   );
 };

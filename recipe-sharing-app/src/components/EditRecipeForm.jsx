@@ -1,66 +1,65 @@
-import React, { useState, useEffect } from 'react';
+// src/components/EditRecipeForm.jsx
+
+import { useState, useEffect } from 'react';
+import useRecipeStore from '../recipeStore';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useRecipeStore } from '../store/recipeStore';
 
 const EditRecipeForm = () => {
-  const { id } = useParams();
-  const recipe = useRecipeStore(state => state.recipes.find(r => r.id === id));
-  const updateRecipe = useRecipeStore(state => state.updateRecipe);
-  const navigate = useNavigate();
+const { id } = useParams();
+const recipeId = parseInt(id);
+const navigate = useNavigate();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [ingredients, setIngredients] = useState('');
-  const [instructions, setInstructions] = useState('');
+  // الحصول على الوصفة الحالية ودالة التحديث
+const [recipe, updateRecipe] = useRecipeStore(state => [
+    state.recipes.find(r => r.id === recipeId),
+    state.updateRecipe
+]);
 
-  useEffect(() => {
+const [title, setTitle] = useState('');
+const [description, setDescription] = useState('');
+
+  // تهيئة الحقول بقيم الوصفة الموجودة عند التحميل
+useEffect(() => {
     if (recipe) {
-      setTitle(recipe.title || '');
-      setDescription(recipe.description || '');
-      setIngredients((recipe.ingredients || []).join(', '));
-      setInstructions(recipe.instructions || '');
+      setTitle(recipe.title);
+      setDescription(recipe.description);
     }
   }, [recipe]);
 
-  if (!recipe) return <div>Recipe not found.</div>;
+  if (!recipe) {
+    return <p>الوصفة غير موجودة.</p>;
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    updateRecipe(id, {
-      title,
-      description,
-      ingredients: ingredients ? ingredients.split(',').map(i => i.trim()) : [],
-      instructions,
-    });
-    navigate(`/recipes/${id}`);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    
+    // استدعاء دالة تحديث الحالة
+    updateRecipe({ id: recipeId, title, description });
+    
+    navigate(`/recipes/${recipeId}`); // العودة إلى صفحة التفاصيل
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 max-w-lg">
-      <div>
-        <label>Title</label>
-        <input value={title} onChange={e => setTitle(e.target.value)} className="w-full" />
-      </div>
-
-      <div>
-        <label>Description</label>
-        <input value={description} onChange={e => setDescription(e.target.value)} className="w-full" />
-      </div>
-
-      <div>
-        <label>Ingredients (comma separated)</label>
-        <input value={ingredients} onChange={e => setIngredients(e.target.value)} className="w-full" />
-      </div>
-
-      <div>
-        <label>Instructions</label>
-        <textarea value={instructions} onChange={e => setInstructions(e.target.value)} className="w-full" />
-      </div>
-
-      <div className="space-x-2">
-        <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">Save</button>
-        <button type="button" onClick={() => navigate(-1)} className="px-4 py-2 border rounded">Cancel</button>
-      </div>
+    <form onSubmit={handleSubmit} style={{ border: '1px solid #ffc107', padding: '20px', borderRadius: '8px' }}>
+      <h2>تعديل: {recipe.title}</h2>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="عنوان الوصفة"
+        required
+        style={{ display: 'block', marginBottom: '10px', padding: '10px', width: '100%', border: '1px solid #ffc107' }}
+      />
+      <textarea
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="وصف الوصفة"
+        required
+        style={{ display: 'block', marginBottom: '10px', padding: '10px', width: '100%', minHeight: '100px', border: '1px solid #ffc107' }}
+      />
+      <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#ffc107', color: 'black', border: 'none', borderRadius: '4px' }}>
+        حفظ التعديلات
+      </button>
     </form>
   );
 };

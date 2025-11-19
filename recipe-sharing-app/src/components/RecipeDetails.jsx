@@ -1,43 +1,35 @@
-import React from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useRecipeStore } from '../store/recipeStore';
+// src/components/RecipeDetails.jsx
+
+import useRecipeStore from '../recipeStore';
+import { useParams, Link } from 'react-router-dom';
 import DeleteRecipeButton from './DeleteRecipeButton';
 
 const RecipeDetails = () => {
   const { id } = useParams();
-  const recipe = useRecipeStore(state => state.recipes.find(r => r.id === id));
-  const navigate = useNavigate();
+  const recipeId = parseInt(id); // تحويل المعرّف من نص إلى رقم
+
+  // انتقاء الوصفة المطابقة من المخزن
+  const recipe = useRecipeStore(state => 
+    state.recipes.find(r => r.id === recipeId)
+  );
 
   if (!recipe) {
-    return (
-      <div>
-        <p>Recipe not found.</p>
-        <button onClick={() => navigate(-1)}>Go back</button>
-      </div>
-    );
+    return <p>عذراً، لم يتم العثور على هذه الوصفة.</p>;
   }
 
   return (
-    <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold">{recipe.title}</h1>
-      <p className="my-2 text-gray-700">{recipe.description}</p>
-
-      <section className="my-4">
-        <h2 className="font-semibold">Ingredients</h2>
-        <ul className="list-disc ml-6">
-          {recipe.ingredients.map((ing, i) => <li key={i}>{ing}</li>)}
-        </ul>
-      </section>
-
-      <section className="my-4">
-        <h2 className="font-semibold">Instructions</h2>
-        <p>{recipe.instructions}</p>
-      </section>
-
-      <div className="mt-4 space-x-2">
-        <Link to={`/edit/${recipe.id}`} className="px-3 py-2 bg-yellow-400 rounded">Edit</Link>
+    <div style={{ border: '1px solid #007bff', padding: '20px', borderRadius: '8px' }}>
+      <h1 style={{ color: '#007bff' }}>{recipe.title}</h1>
+      <p style={{ fontSize: '1.1em' }}>{recipe.description}</p>
+      
+      <div style={{ marginTop: '20px' }}>
+        <Link to={`/edit/${recipe.id}`}>
+          <button style={{ padding: '8px 12px', backgroundColor: '#ffc107', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer', marginRight: '10px' }}>
+            تعديل الوصفة
+          </button>
+        </Link>
         <DeleteRecipeButton recipeId={recipe.id} />
-        <button onClick={() => navigate(-1)} className="px-3 py-2 border rounded">Back</button>
+        <Link to="/" style={{ marginLeft: '10px', textDecoration: 'none', color: '#6c757d' }}>العودة للقائمة</Link>
       </div>
     </div>
   );
