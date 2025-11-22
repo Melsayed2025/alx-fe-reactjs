@@ -44,7 +44,7 @@ function Search() {
       {loading && <p>Loading...</p>}
 
       {/* حالة الخطأ */}
-      {error && <p>Looks like we can't find the user</p>}
+      {error && <p>"Looks like we cant find the user"</p>}
 
       {/* حالة النجاح */}
       {user && (
