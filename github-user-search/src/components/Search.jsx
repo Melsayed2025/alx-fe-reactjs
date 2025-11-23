@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { searchUsers } from "../services/githubService";
 
+// إضافة الدالة fetchUserData كما طلبت
+export async function fetchUserData(params) {
+  return await searchUsers(params);
+}
+
 function Search() {
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");
@@ -17,7 +22,8 @@ function Search() {
     setResults([]);
 
     try {
-      const data = await searchUsers({ username, location, minRepos });
+      // استخدام fetchUserData بدلاً من searchUsers مباشرة
+      const data = await fetchUserData({ username, location, minRepos });
 
       if (!data.items || data.items.length === 0) {
         setError("No users found.");
