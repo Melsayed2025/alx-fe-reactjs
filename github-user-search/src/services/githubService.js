@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const SEARCH_API_URL = "https://api.github.com/search/users";
+const SEARCH_API_URL = "https://api.github.com/search/users?q";
 
 // البحث المتقدم عن المستخدمين
 export const searchUsers = async ({ username, location, minRepos }) => {
