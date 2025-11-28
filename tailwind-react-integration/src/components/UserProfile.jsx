@@ -1,19 +1,15 @@
 function UserProfile() {
   return (
-    
-    <div className="user-profile bg-gray-100 p-8 max-w-sm mx-auto my-20 rounded-lg shadow-lg">
-      
+    <div className="user-profile bg-gray-100 p-4 max-w-xs mx-auto my-20 rounded-lg shadow-lg md:p-8 md:max-w-sm">
       <img 
         src="https://via.placeholder.com/150" 
         alt="User" 
-        className="rounded-full w-36 h-36 mx-auto mb-4" 
+        className="rounded-full w-24 h-24 mx-auto mb-4 md:w-36 md:h-36" 
       />
-      
-      <h1 className="text-xl text-blue-800 my-4 text-center font-bold">
+      <h1 className="text-lg text-blue-800 my-4 text-center font-bold md:text-xl">
         John Doe
       </h1>
-      
-      <p className="text-gray-600 text-base text-center">
+      <p className="text-sm text-gray-600 text-center md:text-base">
         Developer at Example Co. Loves to write code and explore new technologies.
       </p>
     </div>
