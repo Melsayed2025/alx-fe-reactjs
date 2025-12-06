@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import recipeData from '../data.json'; // التأكد من مسار الملف الصحيح
+import { Link } from 'react-router-dom'; // تأكد من استيراد Link للتوجيه
+import recipeData from '../data.json'; 
 
 const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // 🌟 حالة جديدة للبحث
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,7 +18,17 @@ const HomePage = () => {
       setLoading(false);
     }
   }, []); 
-
+  
+  // 🌟 منطق التصفية: يتم تصفية الوصفات الأصلية عند تغير searchTerm 
+  const filteredRecipes = recipes.filter(recipe => {
+    // تحويل كل من العنوان والملخص وكلمة البحث إلى حروف صغيرة لضمان مطابقة غير حساسة لحالة الأحرف
+    const lowerCaseSearch = searchTerm.toLowerCase();
+    return (
+      recipe.title.toLowerCase().includes(lowerCaseSearch) ||
+      recipe.summary.toLowerCase().includes(lowerCaseSearch)
+    );
+  });
+  
   // ... (كود التحميل والخطأ كما هو)
   if (loading) {
     return (
@@ -37,18 +49,36 @@ const HomePage = () => {
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8 min-h-screen bg-gray-50">
-      <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-10 text-indigo-800">
+      <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-8 text-indigo-800">
         🍽️ قائمة الوصفات اللذيذة
       </h1>
       
-      {/* شبكة استجابية: 1 عمود (افتراضي)، 2 عمود (متوسط)، 3 أعمدة (كبير) */}
+      {/* 🌟 حقل البحث الجديد 🌟 */}
+      <div className="mb-10 max-w-lg mx-auto">
+        <input
+          type="text"
+          placeholder="ابحث عن وصفة (مثل: كربونارا، دجاج، ماسالا...)"
+          value={searchTerm}
+          // تحديث حالة البحث عند كل ضغطة مفتاح
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-4 border-2 border-indigo-300 rounded-xl shadow-lg 
+                     focus:outline-none focus:ring-4 focus:ring-indigo-200 transition"
+        />
+      </div>
+      
+      {/* رسالة في حالة عدم وجود نتائج */}
+      {filteredRecipes.length === 0 && (
+        <p className="text-center text-xl text-gray-500 mt-10">
+          عذراً، لا توجد وصفات مطابقة لـ: **"{searchTerm}"**
+        </p>
+      )}
+
+      {/* عرض قائمة الوصفات المفلترة */}
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {recipes.map(recipe => (
+        {filteredRecipes.map(recipe => (
           <div 
             key={recipe.id}
-            // التنسيقات الأساسية للبطاقة
             className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 
-                       // تأثيرات التفاعل (Hover Effects)
                        transform transition duration-500 
                        hover:scale-[1.03] 
                        hover:shadow-2xl"
@@ -58,7 +88,7 @@ const HomePage = () => {
             <img 
               src={recipe.image} 
               alt={recipe.title} 
-              className="w-full h-56 object-cover" // زيادة ارتفاع الصورة قليلاً
+              className="w-full h-56 object-cover" 
             />
             
             <div className="p-5">
@@ -72,14 +102,15 @@ const HomePage = () => {
                 {recipe.summary}
               </p>
               
-              {/* زر الإجراء */}
-              <button 
-                className="w-full bg-indigo-600 text-white font-medium py-3 rounded-lg 
+              {/* زر الإجراء (يجب أن يكون Link للتوجيه إلى صفحة التفاصيل) */}
+              <Link 
+                to={`/recipe/${recipe.id}`} // استخدام مسار تفاصيل الوصفة
+                className="w-full block text-center bg-indigo-600 text-white font-medium py-3 rounded-lg 
                            hover:bg-indigo-700 
                            focus:outline-none focus:ring-4 focus:ring-indigo-300 transition duration-150"
               >
                 اكتشف الوصفة
-              </button>
+              </Link>
             </div>
           </div>
         ))}
