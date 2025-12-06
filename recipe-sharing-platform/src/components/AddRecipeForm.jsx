@@ -13,7 +13,8 @@ const AddRecipeForm = ({ onAddRecipe }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const name = e.target.name;
+    const value = e.target.value; // استخدام صريح لـ e.target.value
     setFormData(prevData => ({
       ...prevData,
       [name]: value,
