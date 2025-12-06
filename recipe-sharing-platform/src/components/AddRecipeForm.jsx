@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 
 const AddRecipeForm = () => {
-  // حالة لتخزين مدخلات النموذج
-  const [formData, setFormData] = useState({
-    title: '',
-    ingredients: '', // سيتم فصلها لاحقاً بواسطة خطوط جديدة
-    instructions: '', // سيتم فصلها لاحقاً بواسطة خطوط جديدة
-    image: '', // حقل اختياري لصورة وهمية
-  });
+const [formData, setFormData] = useState({
+  title: '',
+  ingredients: '',
+  steps: '', // 🌟 التغيير هنا
+  image: '', 
+});
 
   // حالة لتخزين أخطاء التحقق
   const [errors, setErrors] = useState({});
@@ -163,19 +162,13 @@ const AddRecipeForm = () => {
               خطوات التحضير
             </label>
             <textarea
-              id="instructions"
-              name="instructions"
-              rows="7"
-              value={formData.instructions}
-              onChange={handleChange}
-              // Tailwind Styling: تصميم استجابي وتركيز جذاب
-              className={`w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-4 transition duration-200 resize-y 
-                         ${errors.instructions ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-indigo-200 focus:border-indigo-500'}`}
-              placeholder="مثال:
-1. سخن الفرن على درجة حرارة 180 درجة مئوية.
-2. اخلط جميع المكونات في وعاء كبير.
-3. ضع الخليط في قالب الخبز واخبزه لمدة 30 دقيقة."
-            ></textarea>
+  id="steps"
+  name="steps" // 🌟 والتغيير هنا
+  rows="7"
+  value={formData.steps} // 🌟 والتغيير هنا
+  // ... (بقية التنسيقات)
+></textarea>
+
             {errors.instructions && <p className="mt-1 text-sm text-red-600">{errors.instructions}</p>}
           </div>
 
