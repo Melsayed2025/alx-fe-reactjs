@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
-// 🌟 استلام دالة onAddRecipe كـ prop
+
 const AddRecipeForm = ({ onAddRecipe }) => { 
-  // حالة لتخزين مدخلات النموذج
+  // تم تغيير 'instructions' إلى 'steps'
   const [formData, setFormData] = useState({
     title: '',
     ingredients: '', 
-    instructions: '', 
+    steps: '', // 🌟 تم التغيير
     image: '', 
   });
 
-  // حالة لتخزين أخطاء التحقق
   const [errors, setErrors] = useState({});
-  // حالة لتأكيد الإرسال الناجح
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // 1. معالج التغيير: تحديث حالة formData عند كتابة المستخدم
   const handleChange = (e) => {
-    // 💡 ملاحظة: const { name, value } = e.target; هي اختصار لـ name = e.target.name و value = e.target.value
     const { name, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
@@ -24,7 +20,6 @@ const AddRecipeForm = ({ onAddRecipe }) => {
     }));
   };
 
-  // 2. منطق التحقق من صحة النموذج (لم يتم تعديله)
   const validateForm = () => {
     let newErrors = {};
     let isValid = true;
@@ -45,8 +40,9 @@ const AddRecipeForm = ({ onAddRecipe }) => {
       }
     }
 
-    if (!formData.instructions.trim()) {
-      newErrors.instructions = 'يُرجى إدخال خطوات التحضير.';
+    // تم تغيير formData.instructions إلى formData.steps
+    if (!formData.steps.trim()) { // 🌟 تم التغيير
+      newErrors.steps = 'يُرجى إدخال خطوات التحضير.'; // 🌟 تم التغيير
       isValid = false;
     }
     
@@ -54,23 +50,20 @@ const AddRecipeForm = ({ onAddRecipe }) => {
     return isValid;
   };
 
-  // 3. معالج الإرسال المحدث: استدعاء onAddRecipe
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (validateForm()) {
-      // 🌟 استدعاء الدالة الممررة من المكون الأب لتحديث قائمة الوصفات
-      if (onAddRecipe) {
-          onAddRecipe(formData);
-      }
+      if (onAddRecipe) {
+          onAddRecipe(formData);
+      }
       
       setIsSubmitted(true);
       
-      // مسح النموذج بعد الإرسال الناجح 
       setFormData({
         title: '',
         ingredients: '',
-        instructions: '',
+        steps: '', // 🌟 تم التغيير
         image: '',
       });
       setErrors({});
@@ -111,7 +104,6 @@ const AddRecipeForm = ({ onAddRecipe }) => {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              // Tailwind Styling: تصميم استجابي وتركيز جذاب
               className={`w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-4 transition duration-200 
                          ${errors.title ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-indigo-200 focus:border-indigo-500'}`}
               placeholder="مثل: لازانيا بالخضروات، دجاج مشوي بالعسل"
@@ -146,7 +138,6 @@ const AddRecipeForm = ({ onAddRecipe }) => {
               rows="5"
               value={formData.ingredients}
               onChange={handleChange}
-              // Tailwind Styling: تصميم استجابي وتركيز جذاب
               className={`w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-4 transition duration-200 resize-y 
                          ${errors.ingredients ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-indigo-200 focus:border-indigo-500'}`}
               placeholder="مثال:
@@ -159,24 +150,23 @@ const AddRecipeForm = ({ onAddRecipe }) => {
 
           {/* حقل خطوات التحضير (Textarea) */}
           <div>
-            <label htmlFor="instructions" className="block text-lg font-medium text-gray-700 mb-2">
+            <label htmlFor="steps" className="block text-lg font-medium text-gray-700 mb-2">
               خطوات التحضير
             </label>
             <textarea
-              id="instructions"
-              name="instructions"
+              id="steps" // 🌟 تم التغيير
+              name="steps" // 🌟 تم التغيير
               rows="7"
-              value={formData.instructions}
+              value={formData.steps} // 🌟 تم التغيير
               onChange={handleChange}
-              // Tailwind Styling: تصميم استجابي وتركيز جذاب
               className={`w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-4 transition duration-200 resize-y 
-                         ${errors.instructions ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-indigo-200 focus:border-indigo-500'}`}
+                         ${errors.steps ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-indigo-200 focus:border-indigo-500'}`} // 🌟 تم التغيير
               placeholder="مثال:
 1. سخن الفرن على درجة حرارة 180 درجة مئوية.
 2. اخلط جميع المكونات في وعاء كبير.
 3. ضع الخليط في قالب الخبز واخبزه لمدة 30 دقيقة."
             ></textarea>
-            {errors.instructions && <p className="mt-1 text-sm text-red-600">{errors.instructions}</p>}
+            {errors.steps && <p className="mt-1 text-sm text-red-600">{errors.steps}</p>} {/* 🌟 تم التغيير */}
           </div>
 
           {/* زر الإرسال */}
@@ -192,6 +182,7 @@ const AddRecipeForm = ({ onAddRecipe }) => {
           </div>
         </form>
       </div>
+      <p className='mt-8 text-center text-gray-500'>تم تحديث المكون بنجاح لاستخدام المفتاح "steps" بدلاً من "instructions".</p>
     </div>
   );
 };
