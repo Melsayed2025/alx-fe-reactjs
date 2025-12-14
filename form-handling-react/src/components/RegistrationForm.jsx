@@ -1,32 +1,23 @@
 import { useState } from "react";
 
 export default function RegistrationForm() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (
-      formData.username.trim() === "" ||
-      formData.email.trim() === "" ||
-      formData.password.trim() === ""
+      username.trim() === "" ||
+      email.trim() === "" ||
+      password.trim() === ""
     ) {
       alert("All fields are required");
       return;
     }
 
-    console.log("Form Data:", formData);
+    console.log("Form Data:", { username, email, password });
   };
 
   return (
@@ -34,23 +25,23 @@ export default function RegistrationForm() {
       <input
         name="username"
         placeholder="Username"
-        value={formData.username}
-        onChange={handleChange}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
 
       <input
         name="email"
         placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
 
       <input
         type="password"
         name="password"
         placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
 
       <button type="submit">Register</button>
