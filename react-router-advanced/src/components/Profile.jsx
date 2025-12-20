@@ -1,15 +1,23 @@
-import { Outlet,link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
+import ProfileDetails from "./ProfileDetails";
+import ProfileSettings from "./ProfileSettings";
 
-export default function Profile() {
+const Profile = () => {
+  return (
+    <div>
+      <h1>Profile Page</h1>
 
-    return (
-        <div>
-            <h1>Profile Page</h1>
-            <nav>   
-                <link to= "/profile/details" style={{ marginRight: '10px' }}>Profile Details</link>
-                <link to= "/profile/settings">Profile Settings</link>
-            </nav>
-            <Outlet />
-        </div>
-    );
-}
+      <nav>
+        <Link to="details">Details</Link> |{" "}
+        <Link to="settings">Settings</Link>
+      </nav>
+
+      <Routes>
+        <Route path="details" element={<ProfileDetails />} />
+        <Route path="settings" element={<ProfileSettings />} />
+      </Routes>
+    </div>
+  );
+};
+
+export default Profile;
